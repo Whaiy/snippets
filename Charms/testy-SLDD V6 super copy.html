@@ -1,0 +1,92 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" href="data:;base64,=">
+<title>Super Clicker V6</title><style>
+    *{text-align: center;}
+    button{ width:300px;height:200px;overflow: scroll;}
+    button:active{background: red}
+</style></head><body>
+
+    <button id="butt"></button>
+    <p id="clogs"></p>
+
+</body></html><script>
+// lib 不是必要的
+let log=(obj)=>{return console.log(obj)};
+function $(Sel,Par){return Par==undefined?document.querySelector(Sel):Par.querySelector(Sel)};
+function $$(Sel,Par){return Par==undefined?document.querySelector(Sel):Par.querySelector(Sel)};
+function _(Elm,Evn,Fn){return Elm.addEventListener(Evn,Fn)};
+function __(Elm,Evn,Fn){return Elm.removeEventListener(Evn,Fn)};
+function $_$(fn,timeout){setTimeout(fn,timeout)}
+
+// Charms For Click Event
+function Charms(Elm,Sclk,Lprs,Dclk,SLprs,Drag,iNfo,Timeout=300,LTimeout=600,Tolerate=5) {
+    let DE,ME,DwS=UpS=LpS=SLpS=MvS=0;
+    Dw=(E)=>{
+        DE= !E.touches ? E : E.touches[0];
+        iNfo(DE);
+        DwS==0 && (setTimeout(()=>{
+            LpS==1&&(UpS--)&(LpS=0);SLpS==1&&(UpS--)&(SLpS=0);
+            UpS == 2 ? Dclk() 
+            : UpS==1 
+                ? DwS==1 ? Sclk() 
+                : setTimeout(()=>{SLprs()&(SLpS=1)},LTimeout-Timeout) 
+            : UpS==0&&MvS!=1 && setTimeout(()=>{Lprs()&(LpS=1)},LTimeout-Timeout);
+            DwS=UpS=MvS=0;
+        },Timeout));
+        DwS++;
+        _(document.body,'mouseup',Up);_(document.body,'mousemove',Mv);Elm.setCapture && Elm.setCapture()
+    };
+    Mv=(E)=>{
+        ME = !E.touches ? E : E.touches[0];
+        ML=ME.clientX-DE.clientX;(ML>Tolerate||ML<-Tolerate)&&
+        (UpS=-1)&(MvS=1); // Don't click
+        Drag(DE,ME)
+    };
+    Up=()=>{
+        UpS++;
+        __(document.body,'mouseup',Up),__(document.body,'mousemove',Mv);Elm.releaseCapture && Elm.releaseCapture();
+        __(document.body,'touchend',Up);__(document.body,'touchmove',Mv)
+    };
+    _(Elm,'mousedown',Dw)
+    _(Elm,'touchstart',(E)=>{
+        E.preventDefault();Dw(E);
+        _(document.body,'touchend',Up);_(document.body,'touchmove',Mv);  
+        E.preventDefault()
+    })
+};
+// Runer
+Sclk=()=>{clogs.innerHTML+='Click <br>';console.log('sclk')};
+SLprs=()=>{clogs.innerHTML+='Click With Long Press <br>';console.log('slprs')}
+Lprs=()=>{clogs.innerHTML+='Long press <br>';console.log('lprs')};
+Dclk=()=>{clogs.innerHTML+='Double click <br>';console.log('dclk')};
+Drag=(DE,ME)=>{clogs.innerHTML+=''+DE.screenX+' '+ME.screenX+'<br>';console.log('move')};
+iNfo=(DE)=>{log(['mouseDown',DE])}
+Charms(butt,Sclk,Lprs,Dclk,SLprs,Drag,iNfo)
+
+</script>
+
+<!-- reference
+JS OBJ -- Date
+https://www.w3school.com.cn/jsref/jsref_obj_date.asp
+Date.UTC(year,month,day,hours,minutes,seconds,ms)
+Now = new Date().getTime()
+Now = Date.parse(Date())
+
+https://blog.csdn.net/a695993410/article/details/80717995?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
+指定默认参数
+// 
+function log(x,y){
+    y = y||'world';
+    console.log(x,y);
+}
+// 顺序传参
+function a(a=1,b=2)
+a(134,234)
+// 指定特别参数
+function b({x = 1 ,y = 2} = {}) {
+    console.log("x："+x ,"y："+ y);
+};  b({x:123})
+
+Name Rule：
+复合单词首字母小写，后面首字母大写
+全局变量复合单词首字母大写
+-->

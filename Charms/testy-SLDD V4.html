@@ -1,0 +1,76 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" href="data:;base64,=">
+<title>Super Clicker V4</title><style>
+    button{ width:300px;height:200px;}
+    button:active{background: red}
+</style></head><body>
+
+    <button id="butt"></button>
+
+</body></html><script>
+// lib 不是必要的
+let log=(obj)=>{return console.log(obj)};
+function $(Sel,Par){return Par==undefined?document.querySelector(Sel):Par.querySelector(Sel)};
+function $$(Sel,Par){return Par==undefined?document.querySelector(Sel):Par.querySelector(Sel)};
+function _(Elm,Evn,Fn){return Elm.addEventListener(Evn,Fn)};
+function __(Elm,Evn,Fn){return Elm.removeEventListener(Evn,Fn)};
+// Diferentater
+function SLDD(Elm,Sclk,Lprs,Dclk,CLprs,Drag,Timeout=300,LTimeout=500,Tolerate=5) {
+    let OT,NT,DwS=UpS=0,DE,LpS=0,LLP=0
+    Dw=(E)=>{
+        DE=E;
+        DwS==0 && (setTimeout(()=>{
+            UpS == 2 ? Dclk() : 
+            UpS==1 ? DwS==1 ? Sclk() : setTimeout(()=>{CLprs()&(LLP=1)},LTimeout-Timeout) : 
+            UpS!=-1 && setTimeout(()=>{Lprs()&(LpS=1)},LTimeout-Timeout);
+            DwS=UpS=0;
+        },Timeout)); 
+        DwS++;
+        _(document.body,'mouseup',Up);_(document.body,'mousemove',Mv);Elm.setCapture && Elm.setCapture()
+    };
+    Mv=(E)=>{
+        mvlen=E.clientX-DE.clientX;(mvlen>Tolerate&&mvlen<-Tolerate)&&(UpS=-1)
+        Drag(DE,E);
+    };
+    Up=()=>{
+        UpS++;LpS==1&&(UpS--);LpS=0;LLP==1&&(UpS--);LLP=0
+        __(document.body,'mouseup',Up),__(document.body,'mousemove',Mv);Elm.releaseCapture && Elm.releaseCapture()
+    };
+    _(Elm,'mousedown',Dw)
+};
+// Runer
+Sclk=()=>{butt.innerHTML='Click',''};
+CLprs=()=>{butt.innerHTML='Click With Long Press '}
+Lprs=()=>{butt.innerHTML='Long press'};
+Dclk=()=>{butt.innerHTML='Double click'};
+Drag=(DE,ME)=>{butt.innerHTML=''+DE.clientX+''+ME.clientX+''};
+info=()=>{butt.innerHTML='mouseDown'}
+SLDD(butt,Sclk,Lprs,Dclk,CLprs,Drag)
+
+</script>
+
+<!-- reference
+JS OBJ -- Date
+https://www.w3school.com.cn/jsref/jsref_obj_date.asp
+Date.UTC(year,month,day,hours,minutes,seconds,ms)
+Now = new Date().getTime()
+Now = Date.parse(Date())
+
+https://blog.csdn.net/a695993410/article/details/80717995?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
+指定默认参数
+// 
+function log(x,y){
+    y = y||'world';
+    console.log(x,y);
+}
+// 顺序传参
+function a(a=1,b=2)
+a(134,234)
+// 指定特别参数
+function b({x = 1 ,y = 2} = {}) {
+    console.log("x："+x ,"y："+ y);
+};  b({x:123})
+
+Name Rule：
+复合单词首字母小写，后面首字母大写
+全局变量复合单词首字母大写
+-->

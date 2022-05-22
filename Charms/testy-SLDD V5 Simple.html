@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" href="data:;base64,=">
+<title>Super Clicker V5</title><style>
+    button{ width:300px;height:200px;}
+    button:active{background: red}
+</style></head><body>
+
+    <button id="butt"></button>
+
+</body></html><script>
+// lib 不是必要的
+let log=(obj)=>{return console.log(obj)};
+function $(Sel,Par){return !Par ?document.querySelector(Sel):Par.querySelector(Sel)};
+function $$(Sel,Par){return !Par ?document.querySelector(Sel):Par.querySelector(Sel)};
+function _(Elm,Evn,Fn){return Elm.addEventListener(Evn,Fn)};
+function __(Elm,Evn,Fn){return Elm.removeEventListener(Evn,Fn)};
+// Diferentater
+function SLDD(Elm,Sclk,Dclk,Drag,Dw,Timeout=250,Tolerate=10) {
+    let OT,NT,DwS=UpS=0,DE
+    Dw=(E)=>{
+        E.preventDefault()
+        DE=E;_(document.body,'mouseup',Up);_(document.body,'mousemove',Mv);Elm.setCapture && Elm.setCapture()
+    };
+    Mv=(E)=>{
+        mL=E.clientX-DE.clientX;UpS= mL>Tolerate&&mL<-Tolerate && -1
+        Drag(DE,E);
+    };
+    Up=()=>{
+        UpS++
+        UpS==1&&(setTimeout(()=>{
+            console.log(UpS)
+            UpS == 2 ? Dclk() : UpS==1 && Sclk() ;
+            UpS =  0
+        },Timeout));
+        __(document.body,'mouseup',Up),__(document.body,'mousemove',Mv);Elm.releaseCapture && Elm.releaseCapture()
+    };
+    _(Elm,'mousedown',Dw)
+};
+// Runer
+Sclk=()=>{butt.innerHTML='Click'};
+Dclk=()=>{butt.innerHTML='Double click'};
+Drag=(DE,ME)=>{butt.innerHTML=''+DE.clientX+'\ \ \ \ '+ME.clientX+''};
+Dw=()=>{butt.innerHTML='mouseDown'}
+SLDD($('#butt'),Sclk,Dclk,Drag,Dw)
+
+    </script>

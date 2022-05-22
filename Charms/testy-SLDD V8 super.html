@@ -1,0 +1,67 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" href="data:;base64,=">
+<title>Super Clicker V8</title><style>
+    *{text-align: center;}
+    button{ width:300px;height:200px;overflow: scroll;}
+    button:active{background: red}
+    p{width:300px; height:500px}
+</style></head><body>
+
+    <button id="butt"></button>
+    <p id="clogs"></p>
+
+</body></html><script>
+// lib 不是必要的
+'use strict';  let log=(obj)=>{return console.log(obj)};function $(Sel,Par){return Par==undefined?document.querySelector(Sel):Par.querySelector(Sel)}; function $$(Sel,Par){return Par==undefined?document.querySelector(Sel):Par.querySelector(Sel)}; function _(Elm,Evn,Fn){return Elm.addEventListener(Evn,Fn)}; function __(Elm,Evn,Fn){return Elm.removeEventListener(Evn,Fn)}; function $_$(fn,timeout){setTimeout(fn,timeout)}
+
+// Charms For Click Event
+function Charms(element,{sclick=()=>{},dclick=()=>{},lpress=()=>{},slpress=()=>{},dinfo=()=>{},sdrag=()=>{},ldrag=()=>{},dtimeout=300,sltimeout=600}){
+    let 
+    //  Mouse-Foucs Even
+        DE, ME,
+    // Real Event StateCode
+        DW, MV, UP,
+    // Custom Event StateCode
+        SC, DC, LP, SLP;
+        DW= MV= UP= SC= DC= LP= SLP= 0;
+    // Default Event
+    let dw=(E)=>{
+        DW == 0 && (
+            setTimeout(()=>{
+                // sclick() dclick
+                UP == 2
+                ? dclick()
+                :
+                setTimeout(()=>{
+                    
+                },300)
+            },300)
+        )
+        DW++;
+    };
+    let mv=(E)=>{
+
+    };
+    let up=( )=>{
+        UP++
+    };
+    _(element,'mousedown',dw)
+    _(element,'touchstart',(E)=>{E.preventDefault();dw(E)})
+};
+// runner
+// pub
+Charms(butt,{
+    sclick:     ()=>{ log('sclick')
+
+    },
+    dclick:     ()=>{ log('dclick')
+
+    },
+    lpress:     ()=>{ log('lpress')
+
+    },
+    slpress:    ()=>{ log('slpress')
+
+    }
+})
+
+</script>

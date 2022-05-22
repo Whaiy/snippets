@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<meta charset=UTF-8>
+<link rel=icon href=data:base64>
+<title>Heap Tree .Inorder</title>
+<style>
+    html,body{display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;height:100%}html *, body *{flex:0 0 auto}
+    svg{
+        border:dashed #000000 1px;
+        width:600px;height:300px;
+    }
+    @keyframes key{
+        from{fill:red}
+        to{fill:red}
+    }
+    circle{
+        stroke:black;stroke-width:1;
+        fill:white;
+    }
+    text{
+        font-size:1em;
+        transform: translateY(0.5em);
+        text-anchor:middle;
+    }
+    path{
+        stroke:black;stroke-width:1;
+    }
+</style>
+<body>
+    <svg class="heapTree" xmlnx=http://www.w3.org/2000/svg viewBox="0 0 600 300"></svg>
+<script>"use stric";
+    let arr = [
+                                  0,
+                     1,                         2,
+             3,            4,             5,                6,
+          7,    8,      9,      10,      11,    12,     13,     14,
+       15,16, 17,18,  19,20,   21,1,  23,24, 25,26,  27,28,    29
+    ],
+    r=16, w=550, h=200, x=25, y=250;
+    let heapTree=``;
+    let n=arr.length;
+    let floor=Math.floor(Math.log2(n))+1;
+    let nmn= 2**(floor-1);
+    let nmx= 2**floor-1;
+    let rowGap=w/(nmx-nmn);
+    let maxstartcx= x + rowGap * (nmx-nmn);
+    let cx= x + rowGap * (n-nmn);
+    let cy= y;
+    let columnGap = h/(floor-1);
+    let startcx=cx.toFixed(2),startcy=cy.toFixed(2),endcx=(cx+rowGap/2).toFixed(2),endcy=cy-columnGap;
+    // stringify
+    for(let i=arr.length-1; i>-1; i--){
+        if (i+2 == nmn){
+            floor--;
+            nmn=2**(floor-1);
+            cx=maxstartcx=maxstartcx-rowGap/2;
+            cy=cy-columnGap;
+            rowGap+=rowGap;
+        };
+        cx=parseFloat(cx.toFixed(2));cy=parseFloat(cy.toFixed(2));
+        heapTree = `
+            <circle cx="${cx}" cy="${cy}" r="${r}"/>
+            <text x="${cx}" y="${cy}">${arr[i]}</text>
+        ` + heapTree;
+        if(i+i+2==n){
+            heapTree=`
+                <path d="M${startcx} ${startcy}L${endcx} ${endcy}"/>
+            ` + heapTree;
+        }
+        if (i+i+2<n){
+            let leaf_lx,leaf_ly,leaf_rx;
+            leaf_rx=cx-rowGap/2/2;
+            leaf_lx=cx+rowGap/2/2; leaf_ly=cy+columnGap;
+            leaf_lx=parseFloat(leaf_lx.toFixed(2));leaf_rx=parseFloat(leaf_rx.toFixed(2));leaf_ly=parseFloat(leaf_ly.toFixed(2));
+            heapTree = `
+                <path d="M${cx} ${cy}L${leaf_lx} ${leaf_ly}ZL${leaf_rx} ${leaf_ly}"/>
+            ` +
+            heapTree;
+        };
+        cx-=rowGap;
+    };
+    // instantiate
+    document.querySelector(".heapTree").innerHTML=heapTree.trim();
+
+circles = document.querySelectorAll("circle");
+// 交换 swap
+    function swap(arr,i,I){tmp=arr[i];arr[i]=arr[I];arr[I]=tmp;}
+// 建堆 buildNotFullMaxHeap
+    for(let timer=0, i=Math.floor(n/2)-1; i>-1; i--,timer++){
+        for(let root=i, leaf=2*root+1; leaf+1<n;){
+            if(arr[leaf]<arr[leaf+1])leaf++;
+            if(arr[root]<arr[leaf])
+                {swap(arr,root,leaf);root=leaf;leaf=2*root+1;}
+            else break;
+        };
+    };
+// 选排 heapSort
+    for(i=n-1; i>0; i--){
+        if(arr[0]>arr[i])swap(arr,0,i);
+// 维护 fixNotFullmaxHeap
+        for(root=0,leaf=2*root+1; leaf+1<i; leaf=2*root+1){
+            if(arr[leaf]<arr[leaf+1])leaf++;
+            if(arr[root]<arr[leaf])
+                {swap(arr,root,leaf);root=leaf;}
+            else break;
+        };
+    }
+
+</script>
+</body>
